@@ -1,7 +1,9 @@
 This requires the php curl module.
 
-===== Contributors =====
+Contributors
+===========
 Martin Giger (original author)
 
-===== License =====
+License
+===========
 This project is licensed under the GPL v3.

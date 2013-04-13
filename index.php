@@ -3,11 +3,11 @@
     Licensed under the GPL v3 license.
 -->
 <?php
-    $baseURL = "https://www.comparis.ch/immobilien/result?requestobject={%22DealType%22%3A10%2C%22SiteId%22%3A0%2C%22RootPropertyTypes%22%3A[1]%2C%22PropertyTypes%22%3A[]%2C%22RoomsFrom%22:null,%22RoomsTo%22:null,%22LivingSpaceFrom%22:null,%22LivingSpaceTo%22:null,%22PriceFrom%22:null,%22PriceTo%22:null,%22ComparisPointsMin%22:0,%22AdAgeMax%22:0,%22AdAgeInHoursMax%22:null,%22Keyword%22:null,%22WithImagesOnly%22:false,%22WithPointsOnly%22:null,%22Radius%22:null,%22MinAvailableDate%22:null,%22MinChangeDate%22:%221753-01-01T00:00:00%22,%22LocationSearchString%22:".getParam('locationSearchString').",%22Sort%22:3,%22HasBalcony%22:false,%22HasTerrace%22:false,%22HasFireplace%22:false,%22HasDishwasher%22:false,%22HasWashingMachine%22:false,%22HasLift%22:false,%22HasParking%22:false,%22PetsAllowed%22:false,%22MinergieCertified%22:false,%22WheelchairAccessible%22:false,%22LowerLeftLatitude%22:null,%22LowerLeftLongitude%22:null,%22UpperRightLatitude%22:null,%22UpperRightLongitude%22:null}&page=";
+    $baseURL = "https://www.comparis.ch/immobilien/result?requestobject={%22DealType%22%3A10%2C%22SiteId%22%3A0%2C%22RootPropertyTypes%22%3A[1]%2C%22PropertyTypes%22%3A[]%2C%22RoomsFrom%22:null,%22RoomsTo%22:null,%22LivingSpaceFrom%22:null,%22LivingSpaceTo%22:null,%22PriceFrom%22:null,%22PriceTo%22:null,%22ComparisPointsMin%22:0,%22AdAgeMax%22:0,%22AdAgeInHoursMax%22:null,%22Keyword%22:null,%22WithImagesOnly%22:false,%22WithPointsOnly%22:null,%22Radius%22:null,%22MinAvailableDate%22:null,%22MinChangeDate%22:%221753-01-01T00:00:00%22,%22LocationSearchString%22:".getParam('locationSearchString').",%22Sort%22:3,%22HasBalcony%22:".getParam('hasBalcony').",%22HasTerrace%22:false,%22HasFireplace%22:false,%22HasDishwasher%22:false,%22HasWashingMachine%22:false,%22HasLift%22:false,%22HasParking%22:false,%22PetsAllowed%22:false,%22MinergieCertified%22:false,%22WheelchairAccessible%22:false,%22LowerLeftLatitude%22:null,%22LowerLeftLongitude%22:null,%22UpperRightLatitude%22:null,%22UpperRightLongitude%22:null}&page=";
     $places = array();
-    
+
     $page = 0;
-    
+
     if($_GET['locationSearchString']) {
         $placeBuffer = getComparisPage($baseURL.$page);
         while($placeBuffer) {
@@ -54,10 +54,17 @@
     }
     
     function getParam($key) {
-        if($_GET[$key])
+        if($_GET[$key]) {
+            if(preg_match('/^has/i',$key))
+                return 'true';
+
             return "%22".$_GET[$key]."%22";
-        else
+        }
+        else {
+            if(preg_match('/^has/i',$key))
+                return 'false';
             return "null";
+        }
     }
     
     function getPTinfo($address) {
@@ -89,6 +96,7 @@
     <body>
         <form action="index.php" method="get">
             <label for="locationSearchString">Ort oder PLZ </label><input type="text" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>">
+            <input type="checkbox" name="hasBalcony" value="1" <?php if($_GET['hasBalcony']=='1') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>
             <input type="submit" value="Suchen">
         </form>
         <ul>

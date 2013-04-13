@@ -97,7 +97,7 @@
         foreach($node->getElementsByTagName('td') as $row) {
             if($row->getAttribute('valign')=='top'&&$row->getAttribute('align')=='left') {
                 $addss = preg_split('/\s+/',$row->nodeValue);
-                return preg_replace('/(\n|'.$addss[1].'\s)+/','',$row->nodeValue);
+                return preg_replace('/(\r|\f|\e|\n|'.$addss[1].'\s|^\s|\s$)+/','',preg_replace('/\s+/',' ',$row->nodeValue));
             }
         }
         return null;

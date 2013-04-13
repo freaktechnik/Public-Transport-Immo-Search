@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <!--
     Created by Martin Giger
     Licensed under the GPL v3 license.
@@ -95,13 +97,12 @@
         foreach($node->getElementsByTagName('td') as $row) {
             if($row->getAttribute('valign')=='top'&&$row->getAttribute('align')=='left') {
                 $addss = preg_split('/\s+/',$row->nodeValue);
-                return preg_replace('/(\n|'.$addss[1].'\s)/','',$row->nodeValue);
+                return preg_replace('/(\n|'.$addss[1].'\s)+/','',$row->nodeValue);
             }
         }
         return null;
     }
 ?>
-<html>
     <head>
         <title>pt aware immo crawler</title>
     </head>

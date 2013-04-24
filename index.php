@@ -12,7 +12,7 @@
     initFilter($filter);
     
     foreach($_GET as $name => $value) {
-        $aFilter->setProperty(ucfirst($name),$value);
+        $filter->setProperty(ucfirst($name),$value);
     }
     
     $baseURL = "https://www.comparis.ch/immobilien/result?requestobject=".$filter->getComparisRequest()."&page=";

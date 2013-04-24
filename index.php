@@ -162,8 +162,39 @@
     </head>
     <body>
         <form action="index.php" method="get">
-            <label for="locationSearchString">Ort oder PLZ </label><input type="text" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>">
-            <input type="checkbox" name="hasBalcony" value="1" <?php if($_GET['hasBalcony']=='1') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>
+            <input type="radio" name="dealType" value="10" id="rent" <?php if($_GET['dealType']!=10) echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if($_GET['dealType']==20) echo 'checked';?>><label for="buy"> kaufen</label>
+            <label for="locationSearchString">Ort oder PLZ </label><input required type="text" id="locationSearchString" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>">
+            <label for="radius">Umkreis </label><input type="range" min="0" max="20" step="1" id="radius" name="radius" <?php if(isset($_GET['radius'])) echo 'value="'.$_GET['radius'].'"'; ?>>
+            <label for="type">Objektart </label><select id="type" name="rootPropertyTypes">
+                <option value="0" <?php if($_GET['rootPropertyTypes']==0) echo 'selected'; ?>>egal</option>
+                <option value="1" <?php if($_GET['rootPropertyTypes']==1) echo 'selected'; ?>>Whonung</option>
+                <option value="2" <?php if($_GET['rootPropertyTypes']==2) echo 'selected'; ?>>Möblierte Wohnung</option>
+                <option value="3" <?php if($_GET['rootPropertyTypes']==3) echo 'selected'; ?>>WG-Zimmer</option>
+                <option value="4" <?php if($_GET['rootPropertyTypes']==4) echo 'selected'; ?>>Einfamilienhaus</option>
+                <option value="5" <?php if($_GET['rootPropertyTypes']==5) echo 'selected'; ?>>Mehrfamilienhaus</option>
+                <option value="6" <?php if($_GET['rootPropertyTypes']==6) echo 'selected'; ?>>Ferienimmobilie</option>
+                <option value="7" <?php if($_GET['rootPropertyTypes']==7) echo 'selected'; ?>>Grundstück</option>
+                <option value="8" <?php if($_GET['rootPropertyTypes']==8) echo 'selected'; ?>>Parkplatz, Garage</option>
+                <option value="9" <?php if($_GET['rootPropertyTypes']==9) echo 'selected'; ?>>Gewerberaum</option>
+                <option value="26" <?php if($_GET['rootPropertyTypes']==26) echo 'selected'; ?>>Bastelraum</option>
+                <option value="10" <?php if($_GET['rootPropertyTypes']==10) echo 'selected'; ?>>Diverses</option>
+            </select>
+            <label for="roomsFrom">Zimmer </label><input type="number" id="roomsFrom" name="roomsFrom" <?php if(isset($_GET['roomsFrom'])) echo 'value="'.$_GET['roomsFrom'].'"'; ?>> bis <input type="number" id="roomsTo" name="roomsTo" <?php if(isset($_GET['roomsTo'])) echo 'value="'.$_GET['roomsTo'].'"'; ?>>
+            <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF
+            <label for="livingSpaceFrom">Wohnfläche </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup>
+            <label for="minAvailableDate">Einzug ab </label><input type="month" id="minAvailableDate" name="minAvailableDate" <?php if(isset($_GET['minAvailableDate'])) echo 'value="'.$_GET['minAvailableDate'].'"'; ?>>
+            <label for="adAgeMax">Inserat jünger als</label><input id="adAgeMax" name="adAgeMax" type="range" min="0" step="1" max="31" <?php if(isset($_GET['adAgeMax'])) echo 'value="'.$_GET['adAgeMax'].'"'; ?>> Tage
+            <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" <?php if(isset($_GET['comparisPointsMin'])) echo 'value="'.$_GET['comparisPointsMin'].'"'; ?>>
+            <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>
+            <input type="checkbox" name="hasTerace" id="hasTerace" value="true" <?php if($_GET['hasTerace']=='true') echo 'checked'; ?>><label for="hasTerace"> mit Terasse</label>
+            <input type="checkbox" name="hasWashingMachine" id="hasWashingMachine" value="true" <?php if($_GET['hasWashingMachine']==='true') echo 'checked'; ?>><label for="hasWashingMachine"> mit Waschmaschine</label>
+            <input type="checkbox" name="hasLift" id="hasLift" value="true" <?php if($_GET['hasLift']==='true') echo 'checked'; ?>><label for="hasLift"> mit Lift</label>
+            <input type="checkbox" name="hasParking" id="hasParking" value="true" <?php if($_GET['hasParking']==='true') echo 'checked'; ?>><label for="hasParking"> mit Parkplatz</label>
+            <input type="checkbox" name="petsAllowed" id="petsAllowed" value="true" <?php if($_GET['petsAllowed']==='true') echo 'checked'; ?>><label for="petsAllowed"> Haustiere erlaubt</label>
+            <input type="checkbox" name="minergieCertified" id="minergieCertified" value="true" <?php if($_GET['minergieCertified']==='true') echo 'checked'; ?>><label for="minergieCertified"> Minerdie-zertifiziert</label>
+            <input type="checkbox" name="WheelchairAccessible" id="WheelchairAccessible" value="true" <?php if($_GET['WheelchairAccessible']==='true') echo 'checked'; ?>><label for="WheelchairAccessible"> Rollstuhlgängig</label>
+            <input type="checkbox" name="hasFireplace" id="hasFireplace" value="true" <?php if($_GET['hasFireplace']==='true') echo 'checked'; ?>><label for="hasFireplace"> mit Kamin</label>
+            <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label>
             <input type="submit" value="Suchen">
         </form>
         <ul>

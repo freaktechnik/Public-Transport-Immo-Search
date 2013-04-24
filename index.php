@@ -7,7 +7,13 @@
 <?php
     // this is the url for the comparis search page
     $filter = new Filter();
-    $baseURL = "https://www.comparis.ch/immobilien/result?requestobject={%22DealType%22%3A10%2C%22SiteId%22%3A0%2C%22RootPropertyTypes%22%3A[1]%2C%22PropertyTypes%22%3A[]%2C%22RoomsFrom%22:null,%22RoomsTo%22:null,%22LivingSpaceFrom%22:null,%22LivingSpaceTo%22:null,%22PriceFrom%22:null,%22PriceTo%22:null,%22ComparisPointsMin%22:0,%22AdAgeMax%22:0,%22AdAgeInHoursMax%22:null,%22Keyword%22:null,%22WithImagesOnly%22:false,%22WithPointsOnly%22:null,%22Radius%22:null,%22MinAvailableDate%22:null,%22MinChangeDate%22:%221753-01-01T00:00:00%22,%22LocationSearchString%22:".getParam('locationSearchString').",%22Sort%22:3,%22HasBalcony%22:".getParam('hasBalcony').",%22HasTerrace%22:false,%22HasFireplace%22:false,%22HasDishwasher%22:false,%22HasWashingMachine%22:false,%22HasLift%22:false,%22HasParking%22:false,%22PetsAllowed%22:false,%22MinergieCertified%22:false,%22WheelchairAccessible%22:false,%22LowerLeftLatitude%22:null,%22LowerLeftLongitude%22:null,%22UpperRightLatitude%22:null,%22UpperRightLongitude%22:null}&page=";
+    initFilter($filter);
+    
+    foreach($_GET as $name => $value) {
+        $aFilter->setProperty(ucfirst($name),$value);
+    }
+    
+    $baseURL = "https://www.comparis.ch/immobilien/result?requestobject=".$filter->getComparisRequest()."&page=";
     $places = array();
 
     $page = 0;
@@ -157,7 +163,7 @@
         <ul>
             <?php
                 foreach($places as $place) {
-                    echo "<li><a href='".$place->url."'>".$place->title."</a><br>".$place->address."<br>".getPTinfo($place->address)."</li>";
+                    echo "<li><a href='".$place->url."'>".$place->title."</a><br>".$place->address."<br>".getPTinfo($place->address,$filter->getProperty('TransportDestination'),$filter->getProperty('TransportMode'))."</li>";
                 }
             ?>
         </ul>

@@ -21,6 +21,10 @@ class Filter {
         $this->filterProperties[$name]->setValue($value);
     }
     
+    public function getProperty($name) {
+        return $this->filterProperties[$name];
+    }
+    
     public function getComparisRequest() {
         return base64_encode(json_encode($this->getArray('comparis')));
     }

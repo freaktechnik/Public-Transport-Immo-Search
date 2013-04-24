@@ -1,6 +1,6 @@
 <?php
 class Filter {
-    private filterProperties;
+    private $filterProperties;
     
     function __construct() {
         $this->filterProperties = array();
@@ -30,25 +30,25 @@ class Filter {
     }
     
     private function getArrayForTarget($target) {
-        return array_filer($this->filterProperties,create_function('$property','return $property->hasTarget($target);'));
+        return array_filter($this->filterProperties,create_function('$property','return $property->hasTarget($target);'));
     }
     
     public function getArray($target) {
-        return array_map(create_function('$property','return $property->getValue();'),$target?$this->getArray():$this->filterProperties);
+        return array_map(create_function('$property','return $property->getValue();'),$this->getArrayForTarget($target));
     }
 
 }
 
 class FilterProperty {
-    private target
-    private value
-    private type
+    private $target;
+    private $value;
+    private $type;
     
     const STRING = 'string';
     const BOOL = 'boolean';
     const INTEGER = 'int';
     const DATE = 'date';
-    const ARRAY = 'array';
+    const ARR = 'array';
     const FLOAT = 'float';
     
     public
@@ -56,8 +56,6 @@ class FilterProperty {
     function __construct($type,$target) {
         $this->type = $type;
         $this->target = $target;
-        
-        if($this->type == self::DATE)
     }
     
     public function setValue($value) {
@@ -65,7 +63,7 @@ class FilterProperty {
             $this->type == self::BOOL&&is_bool($value) ||
             $this->type == self::INTEGER&&is_int($value) ||
             $this->type == self::FLOAT&&is_float($value) ||
-            $this->type == self::ARRAY&&is_array($value)) {
+            $this->type == self::ARR&&is_array($value)) {
                 $this->value = $value;
         }
         else if($this->type == self::DATE) {
@@ -78,6 +76,9 @@ class FilterProperty {
         }
     }
     
+    private function getDate($date) {
+    }
+    
     public function getValue() {
         return $this->value;
     }
@@ -86,7 +87,7 @@ class FilterProperty {
         return $this->target;
     }*/
     public function hasTarget($target) {
-        return $this->target == $target;
+        return $this->target == $target||$target=='all';
     }
 }
 

@@ -5,6 +5,8 @@
     Licensed under the GPL v3 license.
 -->
 <?php
+    include_once 'filter.php';
+    
     // this is the url for the comparis search page
     $filter = new Filter();
     initFilter($filter);
@@ -30,10 +32,12 @@
     }
 
     function initFilter($aFilter) {
+        $rootProperty = array(0);
+        $propertyTypes = array();
         $aFilter->setProperty('DealType',10,FilterProperty::INTEGER,'comparis');
         $aFilter->setProperty('SiteId',0,FilterProperty::INTEGER,'comparis');
-        $aFilter->setProperty('RootPropertyTypes',array(0),FilterProperty::ARRAY,'comparis');
-        $aFilter->setProperty('PropertyTypes',array(),FilterProperty::ARRAY,'comparis');
+        $aFilter->setProperty('RootPropertyTypes',$rootProperty,FilterProperty::ARR,'comparis');
+        $aFilter->setProperty('PropertyTypes',$propertyTypes,FilterProperty::ARR,'comparis');
         $aFilter->setProperty('RoomsFrom',NULL,FilterProperty::FLOAT,'comparis');
         $aFilter->setProperty('RoomsTo',NULL,FilterProperty::FLOAT,'comparis');
         $aFilter->setProperty('LivingSpaceFrom',NULL,FilterProperty::FLOAT,'comparis');

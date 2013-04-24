@@ -168,7 +168,7 @@
             <label for="type">Objektart </label><select id="type" name="rootPropertyTypes">
                 <option value="0" <?php if($_GET['rootPropertyTypes']==0) echo 'selected'; ?>>egal</option>
                 <option value="1" <?php if($_GET['rootPropertyTypes']==1) echo 'selected'; ?>>Whonung</option>
-                <option value="2" <?php if($_GET['rootPropertyTypes']==2) echo 'selected'; ?>>Möblierte Wohnung</option>
+                <option value="2" <?php if($_GET['rootPropertyTypes']==2) echo 'selected'; ?>>M&ouml;blierte Wohnung</option>
                 <option value="3" <?php if($_GET['rootPropertyTypes']==3) echo 'selected'; ?>>WG-Zimmer</option>
                 <option value="4" <?php if($_GET['rootPropertyTypes']==4) echo 'selected'; ?>>Einfamilienhaus</option>
                 <option value="5" <?php if($_GET['rootPropertyTypes']==5) echo 'selected'; ?>>Mehrfamilienhaus</option>
@@ -181,10 +181,10 @@
             </select>
             <label for="roomsFrom">Zimmer </label><input type="number" id="roomsFrom" name="roomsFrom" <?php if(isset($_GET['roomsFrom'])) echo 'value="'.$_GET['roomsFrom'].'"'; ?>> bis <input type="number" id="roomsTo" name="roomsTo" <?php if(isset($_GET['roomsTo'])) echo 'value="'.$_GET['roomsTo'].'"'; ?>>
             <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF
-            <label for="livingSpaceFrom">Wohnfläche </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup>
+            <label for="livingSpaceFrom">Wohnfl&auml;che </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup>
             <label for="minAvailableDate">Einzug ab </label><input type="month" id="minAvailableDate" name="minAvailableDate" <?php if(isset($_GET['minAvailableDate'])) echo 'value="'.$_GET['minAvailableDate'].'"'; ?>>
-            <label for="adAgeMax">Inserat jünger als</label><input id="adAgeMax" name="adAgeMax" type="range" min="0" step="1" max="31" <?php if(isset($_GET['adAgeMax'])) echo 'value="'.$_GET['adAgeMax'].'"'; ?>> Tage
-            <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" <?php if(isset($_GET['comparisPointsMin'])) echo 'value="'.$_GET['comparisPointsMin'].'"'; ?>>
+            <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '0'; ?>"> Tage
+            <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" value="<?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?>">
             <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>
             <input type="checkbox" name="hasTerace" id="hasTerace" value="true" <?php if($_GET['hasTerace']=='true') echo 'checked'; ?>><label for="hasTerace"> mit Terasse</label>
             <input type="checkbox" name="hasWashingMachine" id="hasWashingMachine" value="true" <?php if($_GET['hasWashingMachine']==='true') echo 'checked'; ?>><label for="hasWashingMachine"> mit Waschmaschine</label>
@@ -192,8 +192,9 @@
             <input type="checkbox" name="hasParking" id="hasParking" value="true" <?php if($_GET['hasParking']==='true') echo 'checked'; ?>><label for="hasParking"> mit Parkplatz</label>
             <input type="checkbox" name="petsAllowed" id="petsAllowed" value="true" <?php if($_GET['petsAllowed']==='true') echo 'checked'; ?>><label for="petsAllowed"> Haustiere erlaubt</label>
             <input type="checkbox" name="minergieCertified" id="minergieCertified" value="true" <?php if($_GET['minergieCertified']==='true') echo 'checked'; ?>><label for="minergieCertified"> Minerdie-zertifiziert</label>
-            <input type="checkbox" name="WheelchairAccessible" id="WheelchairAccessible" value="true" <?php if($_GET['WheelchairAccessible']==='true') echo 'checked'; ?>><label for="WheelchairAccessible"> Rollstuhlgängig</label>
+            <input type="checkbox" name="WheelchairAccessible" id="WheelchairAccessible" value="true" <?php if($_GET['WheelchairAccessible']==='true') echo 'checked'; ?>><label for="WheelchairAccessible"> Rollstuhlg&auml;ngig</label>
             <input type="checkbox" name="hasFireplace" id="hasFireplace" value="true" <?php if($_GET['hasFireplace']==='true') echo 'checked'; ?>><label for="hasFireplace"> mit Kamin</label>
+            <label for="keywords">Inserattext Suche </label><input type="text" id="keywords" name="keyword" <?php if(isset($_GET['keyword'])) echo 'value="'.$_GET['keyword'].'"'; ?>>
             <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label>
             <input type="submit" value="Suchen">
         </form>

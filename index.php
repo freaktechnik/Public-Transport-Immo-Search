@@ -71,8 +71,8 @@
         $aFilter->setProperty('UpperRightLatitude',NULL,FilterProperty::STRING,'comparis');
         $aFilter->setProperty('UpperRightLongitude',NULL,FilterProperty::STRING,'comparis');
         
-        $aFilter->addProperty('TransportDestination','Rämistrasse 101 8006 Zürich',FilterProperty::STRING,'google');
-        $aFilter->addProperty('TransportType','transit',FilterProperty::STRING,'google');
+        $aFilter->setProperty('TransportDestination','Rämistrasse 101 8006 Zürich',FilterProperty::STRING,'google');
+        $aFilter->setProperty('TransportType','transit',FilterProperty::STRING,'google');
     }
     
     function getComparisPage($req) {
@@ -117,12 +117,12 @@
     
     // parse a parameter for the query
     function getParam($key,$filter) {
-        $type = $filter->getProperty($key)->getType();
-        $value = $_GE[$key];
+        $type = $filter->getProperty(ucfirst($key))->getType();
+        $value = $_GET[$key];
         switch($type) {
             case FilterProperty::DATE:  return strtotime($value);
             case FilterProperty::ARR:   return array((int)$value);
-            case FilterProperty::BOOL:  return strcmp($value,'true');
+            case FilterProperty::BOOL:  return $value==='true';
             case FilterProperty::INTEGER:   return (int)$value;
             case FilterProperty::FLOAT: return (float)$value;
             default: return $value;
@@ -144,6 +144,33 @@
         return $data->rows[0]->elements[0]->duration->text;
     }
     
+    function getUPCinfo($address) {
+        $values = preg_split('/\h+/',$address);
+        $length = count($values);
+        for($i = $length;$i>=0;$i--) {
+            if(preg_match('/\d+/i',$values[$i])) {
+                $plz = $values[$i];
+                break;
+            }
+        }
+        $values = preg_split('/\h*'.$plz.'\h*/i',$address);
+        
+        $place = $values[1];
+        
+        preg_match('/(\d*||\d+[a-z]*)$/i',$values[0],$number);
+        $street = preg_replace('/\h*'.$number[0].'\h*/i','',$values[0]);
+        $baseURL = 'http://www.upc-cablecom.ch/content/www-upc-cablecom-ch/config.services.aav.html?vtmission=sendrequest&language=de&strasse='.urlencode($street).'&nummer='.urlencode($number[0]).'&hispeedOrt='.urlencode($plz.' '.$place);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $baseURL);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $json = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode($json);
+        
+        return $data->result->aav_ifp150==='true'||$data->state==='select';
+    }
+    
     // extract address info from an ads cell
     function getAddressString($node) {
         foreach($node->getElementsByTagName('td') as $row) {
@@ -161,7 +188,7 @@
     </head>
     <body>
         <form action="index.php" method="get">
-            <input type="radio" name="dealType" value="10" id="rent" <?php if(!strcmp($_GET['dealType'],'20')) echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if(strcmp($_GET['dealType'],'20')) echo 'checked';?>><label for="buy"> kaufen</label>
+            <input type="radio" name="dealType" value="10" id="rent" <?php if($_GET['dealType']!=='20') echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if($_GET['dealType']==='20') echo 'checked';?>><label for="buy"> kaufen</label>
             <label for="locationSearchString">Ort oder PLZ </label><input required type="text" id="locationSearchString" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>">
             <label for="radius">Umkreis </label><input type="range" min="0" max="20" step="1" id="radius" name="radius" <?php if(isset($_GET['radius'])) echo 'value="'.$_GET['radius'].'"'; ?>>
             <label for="type">Objektart </label><select id="type" name="rootPropertyTypes">
@@ -197,11 +224,11 @@
             <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label>
             
             <label for="destination">Reiseziel </label><input type="text" id="destination" id="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>>
-            <label for="transportType">Verkehrsmittel </label><select id="transportType" name="transportMode">
-                <option value="transit" <?php if(strcmp($_GET['transportType'],'transit')||!isset($_GET['transportType'])) echo 'selected'; ?>>&ouml;V</option>
-                <option value="driving" <?php if(strcmp($_GET['transportType'],'driving')) echo 'selected'; ?>>Auto</option>
-                <option value="bicycling" <?php if(strcmp($_GET['transportType'],'bicycling')) echo 'selected'; ?>>Velo</option>
-                <option value="walking" <?php if(strcmp($_GET['transportType'],'walking')) echo 'selected'; ?>>zu Fuss</option>
+            <label for="transportType">Verkehrsmittel </label><select id="transportType" name="transportType">
+                <option value="transit" <?php if($_GET['transportType']==='transit'||!isset($_GET['transportType'])) echo 'selected'; ?>>&ouml;V</option>
+                <option value="driving" <?php if($_GET['transportType']==='driving') echo 'selected'; ?>>Auto</option>
+                <option value="bicycling" <?php if($_GET['transportType']==='bicycling') echo 'selected'; ?>>Velo</option>
+                <option value="walking" <?php if($_GET['transportType']==='walking') echo 'selected'; ?>>zu Fuss</option>
             </select>
             
             <input type="submit" value="Suchen">
@@ -209,7 +236,7 @@
         <ul>
             <?php
                 foreach($places as $place) {
-                    echo "<li><a href='".$place->url."'>".htmlentities($place->title)."</a><br>".htmlentities($place->address)."<br>".getPTinfo($place->address,$filter->getProperty('TransportDestination'),$filter->getProperty('TransportMode'))."</li>";
+                    echo "<li><a href='".$place->url."'>".htmlentities($place->title)."</a><br>".htmlentities($place->address)."<br>".getPTinfo($place->address,$filter->getProperty('TransportDestination'),$filter->getProperty('TransportMode'))."; UPC-Highspeed: ".(getUPCinfo($place->address)?'Ja':'Nein')."</li>";
                 }
             ?>
         </ul>

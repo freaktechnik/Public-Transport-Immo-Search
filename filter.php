@@ -69,7 +69,7 @@ class FilterProperty {
                 $this->value = $value;
         }
         else if($this->type === self::DATE) {
-            if(strcmp($value,'today')) {
+            if($value==='today') {
                 $this->value = date("Y-m-d\TH:i:s");
             }
             if(is_int($value)) {
@@ -93,7 +93,7 @@ class FilterProperty {
         return $this->target;
     }*/
     public function hasTarget($target) {
-        return $this->target == $target||strcmp($target,'all');
+        return $this->target == $target||$target==='all';
     }
 }
 

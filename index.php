@@ -6,6 +6,7 @@
 -->
 <?php
     // this is the url for the comparis search page
+    $filter = new Filter();
     $baseURL = "https://www.comparis.ch/immobilien/result?requestobject={%22DealType%22%3A10%2C%22SiteId%22%3A0%2C%22RootPropertyTypes%22%3A[1]%2C%22PropertyTypes%22%3A[]%2C%22RoomsFrom%22:null,%22RoomsTo%22:null,%22LivingSpaceFrom%22:null,%22LivingSpaceTo%22:null,%22PriceFrom%22:null,%22PriceTo%22:null,%22ComparisPointsMin%22:0,%22AdAgeMax%22:0,%22AdAgeInHoursMax%22:null,%22Keyword%22:null,%22WithImagesOnly%22:false,%22WithPointsOnly%22:null,%22Radius%22:null,%22MinAvailableDate%22:null,%22MinChangeDate%22:%221753-01-01T00:00:00%22,%22LocationSearchString%22:".getParam('locationSearchString').",%22Sort%22:3,%22HasBalcony%22:".getParam('hasBalcony').",%22HasTerrace%22:false,%22HasFireplace%22:false,%22HasDishwasher%22:false,%22HasWashingMachine%22:false,%22HasLift%22:false,%22HasParking%22:false,%22PetsAllowed%22:false,%22MinergieCertified%22:false,%22WheelchairAccessible%22:false,%22LowerLeftLatitude%22:null,%22LowerLeftLongitude%22:null,%22UpperRightLatitude%22:null,%22UpperRightLongitude%22:null}&page=";
     $places = array();
 
@@ -22,6 +23,47 @@
         }
     }
 
+    function initFilter($aFilter) {
+        $aFilter->setProperty('DealType',10,FilterProperty::INTEGER,'comparis');
+        $aFilter->setProperty('SiteId',0,FilterProperty::INTEGER,'comparis');
+        $aFilter->setProperty('RootPropertyTypes',array(0),FilterProperty::ARRAY,'comparis');
+        $aFilter->setProperty('PropertyTypes',array(),FilterProperty::ARRAY,'comparis');
+        $aFilter->setProperty('RoomsFrom',NULL,FilterProperty::FLOAT,'comparis');
+        $aFilter->setProperty('RoomsTo',NULL,FilterProperty::FLOAT,'comparis');
+        $aFilter->setProperty('LivingSpaceFrom',NULL,FilterProperty::FLOAT,'comparis');
+        $aFilter->setProperty('LivingSpaceTo',NULL,FilterProperty::FLOAT,'comparis');
+        $aFilter->setProperty('PriceFrom',NULL,FilterProperty::FLOAT,'comparis');
+        $aFilter->setProperty('PriceTo',NULL,FilterProperty::FLOAT,'comparis');
+        $aFilter->setProperty('ComparisPointsMin',0,FilterProperty::INTEGER,'comparis');
+        $aFilter->setProperty('AdAgeMax',0,FilterProperty::INTEGER,'comparis'); // in days
+        $aFilter->setProperty('AdAgeInHoursMax',NULL,FilterProperty::STRING,'comparis');
+        $aFilter->setProperty('Keyword',NULL,FilterProperty::STRING,'comparis');
+        $aFilter->setProperty('WithImagesOnly',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('WithPointsOnly',NULL,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('Radius',NULL,FilterProperty::INTEGER,'comparis');
+        $aFilter->setProperty('MinAvailableDate',NULL,FilterProperty::DATE,'comparis'); // NULL
+        $aFilter->setProperty('MinChangeDate',NULL,FilterProperty::DATE,'comparis'); //now
+        $aFilter->addProperty(FilterProperty::STRING,'LocationSearchString','comparis');
+        $aFilter->setProperty('Sort',3,FilterProperty::INTEGER,'comparis');
+        $aFilter->setProperty('HasBalcony',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('HasTerrace',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('HasFireplace',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('HasDishwasher',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('HasWashingMachine',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('HasLift',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('HasParking',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('PetsAllowed',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('MinergieCertified',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('WheelchairAccessible',false,FilterProperty::BOOL,'comparis');
+        $aFilter->setProperty('LowerLeftAltitude',NULL,FilterProperty::STRING,'comparis');
+        $aFilter->setProperty('LowerLeftLongitude',NULL,FilterProperty::STRING,'comparis');
+        $aFilter->setProperty('UpperRightLatitude',NULL,FilterProperty::STRING,'comparis');
+        $aFilter->setProperty('UpperRightLongitude',NULL,FilterProperty::STRING,'comparis');
+        
+        $aFilter->addProperty('TransportDestination','Rämistrasse 101 8006 Zürich',FilterProperty::STRING,'google');
+        $aFilter->addProperty('TransportType','transit',FilterProperty::STRING,'google');
+    }
+    
     function getComparisPage($req) {
         // load the page
         $ch = curl_init();
@@ -78,9 +120,9 @@
     }
     
     // load time from google
-    function getPTinfo($address) {
+    function getPTinfo($address,$destination,$mode) {
         $address = preg_replace("/\s/","+",$address);
-        $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$address."&destinations=Rämistrasse+101+8006+Zürich&sensor=false&mode=transit&language=de&units=metric";
+        $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$address."&destinations=".$destination."&sensor=false&mode=".$mode."&language=de&units=metric";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $baseURL);

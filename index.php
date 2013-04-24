@@ -53,7 +53,7 @@
         $aFilter->setProperty('WithPointsOnly',NULL,FilterProperty::BOOL,'comparis');
         $aFilter->setProperty('Radius',NULL,FilterProperty::INTEGER,'comparis');
         $aFilter->setProperty('MinAvailableDate',NULL,FilterProperty::DATE,'comparis'); // NULL
-        $aFilter->setProperty('MinChangeDate',NULL,FilterProperty::DATE,'comparis'); //now
+        $aFilter->setProperty('MinChangeDate','today',FilterProperty::DATE,'comparis'); //now?
         $aFilter->addProperty(FilterProperty::STRING,'LocationSearchString','comparis');
         $aFilter->setProperty('Sort',3,FilterProperty::INTEGER,'comparis');
         $aFilter->setProperty('HasBalcony',false,FilterProperty::BOOL,'comparis');
@@ -97,7 +97,7 @@
                 if($node->getAttribute('class')=="RowResultGeneralData") {
                     // save every entry (more info could be extracted)
                     $results[$j]->url = "https://www.comparis.ch". getDescriptionLink($node)->getAttribute('href');
-                    $results[$j]->title = getDescriptionLink($node)->nodeValue;
+                    $results[$j]->title = utf8_decode(getDescriptionLink($node)->nodeValue);
                     $results[$j]->address = getAddressString($node->getElementsByTagName('table')->item(0));
                     $j = $j+1;
                 }
@@ -133,7 +133,7 @@
     // load time from google
     function getPTinfo($address,$destination,$mode) {
         $address = preg_replace("/\s/","+",$address);
-        $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".url_encode($address)."&destinations=".url_encode($destination)."&sensor=false&mode=".$mode."&language=de&units=metric";
+        $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".urlencode($address)."&destinations=".urlencode($destination)."&sensor=false&mode=".$mode."&language=de&units=metric";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $baseURL);
@@ -149,8 +149,9 @@
     function getAddressString($node) {
         foreach($node->getElementsByTagName('td') as $row) {
             if($row->getAttribute('valign')=='top'&&$row->getAttribute('align')=='left') {
-                $addss = preg_split('/\s+/',$row->nodeValue);
-                return preg_replace('/(\r|\f|\e|\n|'.$addss[1].'\s|^\s|\s$)+/','',preg_replace('/\s+/',' ',$row->nodeValue));
+                $ad = utf8_decode($row->nodeValue);
+                $addss = preg_split('/\s+/',$ad);
+                return utf8_decode(preg_replace('/(\r|\f|\e|\n|'.$addss[1].'\s|^\s|\s$)+/','',preg_replace('/\s+/',' ',$ad)));
             }
         }
         return null;
@@ -168,7 +169,7 @@
         <ul>
             <?php
                 foreach($places as $place) {
-                    echo "<li><a href='".$place->url."'>".$place->title."</a><br>".$place->address."<br>".getPTinfo($place->address,$filter->getProperty('TransportDestination'),$filter->getProperty('TransportMode'))."</li>";
+                    echo "<li><a href='".$place->url."'>".htmlentities($place->title)."</a><br>".htmlentities($place->address)."<br>".getPTinfo($place->address,$filter->getProperty('TransportDestination'),$filter->getProperty('TransportMode'))."</li>";
                 }
             ?>
         </ul>

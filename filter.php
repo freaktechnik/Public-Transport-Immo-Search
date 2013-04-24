@@ -26,11 +26,13 @@ class Filter {
     }
     
     public function getComparisRequest() {
-        return url_encode(json_encode($this->getArray('comparis')));
+        return urlencode(json_encode($this->getArray('comparis')));
     }
     
     private function getArrayForTarget($target) {
-        return array_filter($this->filterProperties,create_function('$property','return $property->hasTarget($target);'));
+        return array_filter($this->filterProperties,function($property) use($target) {
+            return $property->hasTarget($target);
+        });
     }
     
     public function getArray($target='all') {
@@ -59,14 +61,17 @@ class FilterProperty {
     }
     
     public function setValue($value) {
-        if( $this->type == self::STRING&&is_string($value) ||
-            $this->type == self::BOOL&&is_bool($value) ||
-            $this->type == self::INTEGER&&is_int($value) ||
-            $this->type == self::FLOAT&&is_float($value) ||
-            $this->type == self::ARR&&is_array($value)) {
+        if( $this->type === self::STRING&&is_string($value) ||
+            $this->type === self::BOOL&&is_bool($value) ||
+            $this->type === self::INTEGER&&is_int($value) ||
+            $this->type === self::FLOAT&&is_float($value) ||
+            $this->type === self::ARR&&is_array($value)) {
                 $this->value = $value;
         }
-        else if($this->type == self::DATE) {
+        else if($this->type === self::DATE) {
+            if(strcmp($value,'today')) {
+                $this->value = date("Y-m-d\TH:i:s");
+            }
             if(is_int($value)) {
                 $this->value = date("Y-m-d\TH:i:s",$value);
             }
@@ -87,7 +92,7 @@ class FilterProperty {
         return $this->target;
     }*/
     public function hasTarget($target) {
-        return $this->target == $target||$target=='all';
+        return $this->target == $target||strcmp($target,'all');
     }
 }
 

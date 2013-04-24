@@ -30,7 +30,8 @@
             $placeBuffer = getComparisPage($baseURL.$page);
         }
     }
-
+    
+    // set all the possible values to their default
     function initFilter($aFilter) {
         $rootProperty = array(0);
         $propertyTypes = array();
@@ -132,7 +133,7 @@
     // load time from google
     function getPTinfo($address,$destination,$mode) {
         $address = preg_replace("/\s/","+",$address);
-        $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$address."&destinations=".$destination."&sensor=false&mode=".$mode."&language=de&units=metric";
+        $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".url_encode($address)."&destinations=".url_encode($destination)."&sensor=false&mode=".$mode."&language=de&units=metric";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $baseURL);

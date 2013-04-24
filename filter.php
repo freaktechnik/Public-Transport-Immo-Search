@@ -26,14 +26,14 @@ class Filter {
     }
     
     public function getComparisRequest() {
-        return base64_encode(json_encode($this->getArray('comparis')));
+        return url_encode(json_encode($this->getArray('comparis')));
     }
     
     private function getArrayForTarget($target) {
         return array_filter($this->filterProperties,create_function('$property','return $property->hasTarget($target);'));
     }
     
-    public function getArray($target) {
+    public function getArray($target='all') {
         return array_map(create_function('$property','return $property->getValue();'),$this->getArrayForTarget($target));
     }
 

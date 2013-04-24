@@ -12,7 +12,7 @@
     initFilter($filter);
     
     foreach($_GET as $name => $value) {
-        $filter->setProperty(ucfirst($name),$value);
+        $filter->setProperty(ucfirst($name),getParam($name,$filter));
     }
     
     $baseURL = "https://www.comparis.ch/immobilien/result?requestobject=".$filter->getComparisRequest()."&page=";
@@ -116,17 +116,16 @@
     }
     
     // parse a parameter for the query
-    function getParam($key) {
-        if($_GET[$key]) {
-            if(preg_match('/^has/i',$key))
-                return 'true';
-
-            return "%22".$_GET[$key]."%22";
-        }
-        else {
-            if(preg_match('/^has/i',$key))
-                return 'false';
-            return "null";
+    function getParam($key,$filter) {
+        $type = $filter->getProperty($key)->getType();
+        $value = $_GE[$key];
+        switch($type) {
+            case FilterProperty::DATE:  return strtotime($value);
+            case FilterProperty::ARR:   return array((int)$value);
+            case FilterProperty::BOOL:  return strcmp($value,'true');
+            case FilterProperty::INTEGER:   return (int)$value;
+            case FilterProperty::FLOAT: return (float)$value;
+            default: return $value;
         }
     }
     
@@ -182,7 +181,7 @@
             <label for="roomsFrom">Zimmer </label><input type="number" id="roomsFrom" name="roomsFrom" <?php if(isset($_GET['roomsFrom'])) echo 'value="'.$_GET['roomsFrom'].'"'; ?>> bis <input type="number" id="roomsTo" name="roomsTo" <?php if(isset($_GET['roomsTo'])) echo 'value="'.$_GET['roomsTo'].'"'; ?>>
             <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF
             <label for="livingSpaceFrom">Wohnfl&auml;che </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup>
-            <label for="minAvailableDate">Einzug ab </label><input type="month" id="minAvailableDate" name="minAvailableDate" <?php if(isset($_GET['minAvailableDate'])) echo 'value="'.$_GET['minAvailableDate'].'"'; ?>>
+            <label for="minAvailableDate">Einzug ab (YYYY-mm)</label><input type="month" id="minAvailableDate" name="minAvailableDate" <?php if(isset($_GET['minAvailableDate'])) echo 'value="'.$_GET['minAvailableDate'].'"'; ?>>
             <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '0'; ?>"> Tage
             <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" value="<?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?>">
             <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>

@@ -81,7 +81,8 @@ class FilterProperty {
         }
     }
     
-    private function getDate($date) {
+    public function getType() {
+        return $this->type;
     }
     
     public function getValue() {

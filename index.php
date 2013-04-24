@@ -198,7 +198,7 @@
             
             <label for="destination">Reiseziel </label><input type="text" id="destination" id="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>>
             <label for="transportType">Verkehrsmittel </label><select id="transportType" name="transportMode">
-                <option value="transit" <?php if(strcmp($_GET['transportType'],'transit')) echo 'selected'; ?>>&ouml;V</option>
+                <option value="transit" <?php if(strcmp($_GET['transportType'],'transit')||!isset($_GET['transportType'])) echo 'selected'; ?>>&ouml;V</option>
                 <option value="driving" <?php if(strcmp($_GET['transportType'],'driving')) echo 'selected'; ?>>Auto</option>
                 <option value="bicycling" <?php if(strcmp($_GET['transportType'],'bicycling')) echo 'selected'; ?>>Velo</option>
                 <option value="walking" <?php if(strcmp($_GET['transportType'],'walking')) echo 'selected'; ?>>zu Fuss</option>

@@ -48,6 +48,8 @@ class FilterProperty {
     const BOOL = 'boolean';
     const INTEGER = 'int';
     const DATE = 'date';
+    const ARRAY = 'array';
+    const FLOAT = 'float';
     
     public
     
@@ -59,14 +61,12 @@ class FilterProperty {
     }
     
     public function setValue($value) {
-        if($this->type==self::STRING&&is_string($value)) {
-            $this->value = $value;
-        }
-        else if($this->type==self::BOOL&&is_bool($value)) {
-            $this->value = $value;
-        }
-        else if($this->type==self::INTEGER&&is_int($value)) {
-            $this->value = $value;
+        if( $this->type == self::STRING&&is_string($value) ||
+            $this->type == self::BOOL&&is_bool($value) ||
+            $this->type == self::INTEGER&&is_int($value) ||
+            $this->type == self::FLOAT&&is_float($value) ||
+            $this->type == self::ARRAY&&is_array($value)) {
+                $this->value = $value;
         }
         else if($this->type == self::DATE) {
             if(is_int($value)) {

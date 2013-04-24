@@ -161,27 +161,27 @@
     </head>
     <body>
         <form action="index.php" method="get">
-            <input type="radio" name="dealType" value="10" id="rent" <?php if($_GET['dealType']!=10) echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if($_GET['dealType']==20) echo 'checked';?>><label for="buy"> kaufen</label>
+            <input type="radio" name="dealType" value="10" id="rent" <?php if(!strcmp($_GET['dealType'],'20')) echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if(strcmp($_GET['dealType'],'20')) echo 'checked';?>><label for="buy"> kaufen</label>
             <label for="locationSearchString">Ort oder PLZ </label><input required type="text" id="locationSearchString" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>">
             <label for="radius">Umkreis </label><input type="range" min="0" max="20" step="1" id="radius" name="radius" <?php if(isset($_GET['radius'])) echo 'value="'.$_GET['radius'].'"'; ?>>
             <label for="type">Objektart </label><select id="type" name="rootPropertyTypes">
-                <option value="0" <?php if($_GET['rootPropertyTypes']==0) echo 'selected'; ?>>egal</option>
-                <option value="1" <?php if($_GET['rootPropertyTypes']==1) echo 'selected'; ?>>Whonung</option>
-                <option value="2" <?php if($_GET['rootPropertyTypes']==2) echo 'selected'; ?>>M&ouml;blierte Wohnung</option>
-                <option value="3" <?php if($_GET['rootPropertyTypes']==3) echo 'selected'; ?>>WG-Zimmer</option>
-                <option value="4" <?php if($_GET['rootPropertyTypes']==4) echo 'selected'; ?>>Einfamilienhaus</option>
-                <option value="5" <?php if($_GET['rootPropertyTypes']==5) echo 'selected'; ?>>Mehrfamilienhaus</option>
-                <option value="6" <?php if($_GET['rootPropertyTypes']==6) echo 'selected'; ?>>Ferienimmobilie</option>
-                <option value="7" <?php if($_GET['rootPropertyTypes']==7) echo 'selected'; ?>>Grundstück</option>
-                <option value="8" <?php if($_GET['rootPropertyTypes']==8) echo 'selected'; ?>>Parkplatz, Garage</option>
-                <option value="9" <?php if($_GET['rootPropertyTypes']==9) echo 'selected'; ?>>Gewerberaum</option>
-                <option value="26" <?php if($_GET['rootPropertyTypes']==26) echo 'selected'; ?>>Bastelraum</option>
-                <option value="10" <?php if($_GET['rootPropertyTypes']==10) echo 'selected'; ?>>Diverses</option>
+                <option value="0" <?php if($_GET['rootPropertyTypes']==='0') echo 'selected'; ?>>egal</option>
+                <option value="1" <?php if($_GET['rootPropertyTypes']==='1') echo 'selected'; ?>>Whonung</option>
+                <option value="2" <?php if($_GET['rootPropertyTypes']==='2') echo 'selected'; ?>>M&ouml;blierte Wohnung</option>
+                <option value="3" <?php if($_GET['rootPropertyTypes']==='3') echo 'selected'; ?>>WG-Zimmer</option>
+                <option value="4" <?php if($_GET['rootPropertyTypes']==='4') echo 'selected'; ?>>Einfamilienhaus</option>
+                <option value="5" <?php if($_GET['rootPropertyTypes']==='5') echo 'selected'; ?>>Mehrfamilienhaus</option>
+                <option value="6" <?php if($_GET['rootPropertyTypes']==='6') echo 'selected'; ?>>Ferienimmobilie</option>
+                <option value="7" <?php if($_GET['rootPropertyTypes']==='7') echo 'selected'; ?>>Grundstück</option>
+                <option value="8" <?php if($_GET['rootPropertyTypes']==='8') echo 'selected'; ?>>Parkplatz, Garage</option>
+                <option value="9" <?php if($_GET['rootPropertyTypes']==='9') echo 'selected'; ?>>Gewerberaum</option>
+                <option value="26" <?php if($_GET['rootPropertyTypes']==='26') echo 'selected'; ?>>Bastelraum</option>
+                <option value="10" <?php if($_GET['rootPropertyTypes']==='10') echo 'selected'; ?>>Diverses</option>
             </select>
             <label for="roomsFrom">Zimmer </label><input type="number" id="roomsFrom" name="roomsFrom" <?php if(isset($_GET['roomsFrom'])) echo 'value="'.$_GET['roomsFrom'].'"'; ?>> bis <input type="number" id="roomsTo" name="roomsTo" <?php if(isset($_GET['roomsTo'])) echo 'value="'.$_GET['roomsTo'].'"'; ?>>
             <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF
             <label for="livingSpaceFrom">Wohnfl&auml;che </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup>
-            <label for="minAvailableDate">Einzug ab (YYYY-mm)</label><input type="month" id="minAvailableDate" name="minAvailableDate" <?php if(isset($_GET['minAvailableDate'])) echo 'value="'.$_GET['minAvailableDate'].'"'; ?>>
+            <label for="minAvailableDate">Einzug ab (YYYY-mm)</label><input type="month" id="minAvailableDate" name="minAvailableDate" getParam>
             <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '0'; ?>"> Tage
             <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" value="<?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?>">
             <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>
@@ -195,6 +195,15 @@
             <input type="checkbox" name="hasFireplace" id="hasFireplace" value="true" <?php if($_GET['hasFireplace']==='true') echo 'checked'; ?>><label for="hasFireplace"> mit Kamin</label>
             <label for="keywords">Inserattext Suche </label><input type="text" id="keywords" name="keyword" <?php if(isset($_GET['keyword'])) echo 'value="'.$_GET['keyword'].'"'; ?>>
             <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label>
+            
+            <label for="destination">Reiseziel </label><input type="text" id="destination" id="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>>
+            <label for="transportType">Verkehrsmittel </label><select id="transportType" name="transportMode">
+                <option value="transit" <?php if(strcmp($_GET['transportType'],'transit')) echo 'selected'; ?>>&ouml;V</option>
+                <option value="driving" <?php if(strcmp($_GET['transportType'],'driving')) echo 'selected'; ?>>Auto</option>
+                <option value="bicycling" <?php if(strcmp($_GET['transportType'],'bicycling')) echo 'selected'; ?>>Velo</option>
+                <option value="walking" <?php if(strcmp($_GET['transportType'],'walking')) echo 'selected'; ?>>zu Fuss</option>
+            </select>
+            
             <input type="submit" value="Suchen">
         </form>
         <ul>

@@ -96,7 +96,7 @@
             foreach($rows as $node) {
                 if($node->getAttribute('class')=="RowResultGeneralData") {
                     // save every entry (more info could be extracted)
-                    $results[$j]->url = "https://www.comparis.ch". getDescriptionLink($node)->getAttribute('href');
+                    $results[$j]->url = "https://www.comparis.ch".getDescriptionLink($node)->getAttribute('href');
                     $results[$j]->title = utf8_decode(getDescriptionLink($node)->nodeValue);
                     $results[$j]->address = getAddressString($node->getElementsByTagName('table')->item(0));
                     $j = $j+1;
@@ -188,9 +188,9 @@
     </head>
     <body>
         <form action="index.php" method="get">
-            <input type="radio" name="dealType" value="10" id="rent" <?php if($_GET['dealType']!=='20') echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if($_GET['dealType']==='20') echo 'checked';?>><label for="buy"> kaufen</label>
-            <label for="locationSearchString">Ort oder PLZ </label><input required type="text" id="locationSearchString" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>">
-            <label for="radius">Umkreis </label><input type="range" min="0" max="20" step="1" id="radius" name="radius" <?php if(isset($_GET['radius'])) echo 'value="'.$_GET['radius'].'"'; ?>>
+            <input type="radio" name="dealType" value="10" id="rent" <?php if($_GET['dealType']!=='20') echo 'checked';?>><label for="rent"> mieten</label> <input type="radio" name="dealType" value="20" id="buy" <?php if($_GET['dealType']==='20') echo 'checked';?>><label for="buy"> kaufen</label><br>
+            <label for="locationSearchString">Ort oder PLZ </label><input required type="text" id="locationSearchString" name="locationSearchString" value="<?php echo $_GET['locationSearchString']; ?>"><br>
+            <label for="radius">Umkreis </label><input type="range" min="0" max="20" step="1" id="radius" name="radius" onchange="radiusVal.value=value" <?php if(isset($_GET['radius'])) echo 'value="'.$_GET['radius'].'"'; ?>><output id="radiusVal"><?php if(isset($_GET['radius'])) echo $_GET['radius']; else echo 10; ?></output> km<br>
             <label for="type">Objektart </label><select id="type" name="rootPropertyTypes">
                 <option value="0" <?php if($_GET['rootPropertyTypes']==='0') echo 'selected'; ?>>egal</option>
                 <option value="1" <?php if($_GET['rootPropertyTypes']==='1') echo 'selected'; ?>>Whonung</option>
@@ -204,35 +204,36 @@
                 <option value="9" <?php if($_GET['rootPropertyTypes']==='9') echo 'selected'; ?>>Gewerberaum</option>
                 <option value="26" <?php if($_GET['rootPropertyTypes']==='26') echo 'selected'; ?>>Bastelraum</option>
                 <option value="10" <?php if($_GET['rootPropertyTypes']==='10') echo 'selected'; ?>>Diverses</option>
-            </select>
-            <label for="roomsFrom">Zimmer </label><input type="number" id="roomsFrom" name="roomsFrom" <?php if(isset($_GET['roomsFrom'])) echo 'value="'.$_GET['roomsFrom'].'"'; ?>> bis <input type="number" id="roomsTo" name="roomsTo" <?php if(isset($_GET['roomsTo'])) echo 'value="'.$_GET['roomsTo'].'"'; ?>>
-            <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF
-            <label for="livingSpaceFrom">Wohnfl&auml;che </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup>
-            <label for="minAvailableDate">Einzug ab (YYYY-mm)</label><input type="month" id="minAvailableDate" name="minAvailableDate" getParam>
-            <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '0'; ?>"> Tage
-            <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" value="<?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?>">
-            <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label>
-            <input type="checkbox" name="hasTerace" id="hasTerace" value="true" <?php if($_GET['hasTerace']=='true') echo 'checked'; ?>><label for="hasTerace"> mit Terasse</label>
-            <input type="checkbox" name="hasWashingMachine" id="hasWashingMachine" value="true" <?php if($_GET['hasWashingMachine']==='true') echo 'checked'; ?>><label for="hasWashingMachine"> mit Waschmaschine</label>
-            <input type="checkbox" name="hasLift" id="hasLift" value="true" <?php if($_GET['hasLift']==='true') echo 'checked'; ?>><label for="hasLift"> mit Lift</label>
-            <input type="checkbox" name="hasParking" id="hasParking" value="true" <?php if($_GET['hasParking']==='true') echo 'checked'; ?>><label for="hasParking"> mit Parkplatz</label>
-            <input type="checkbox" name="petsAllowed" id="petsAllowed" value="true" <?php if($_GET['petsAllowed']==='true') echo 'checked'; ?>><label for="petsAllowed"> Haustiere erlaubt</label>
-            <input type="checkbox" name="minergieCertified" id="minergieCertified" value="true" <?php if($_GET['minergieCertified']==='true') echo 'checked'; ?>><label for="minergieCertified"> Minerdie-zertifiziert</label>
-            <input type="checkbox" name="WheelchairAccessible" id="WheelchairAccessible" value="true" <?php if($_GET['WheelchairAccessible']==='true') echo 'checked'; ?>><label for="WheelchairAccessible"> Rollstuhlg&auml;ngig</label>
-            <input type="checkbox" name="hasFireplace" id="hasFireplace" value="true" <?php if($_GET['hasFireplace']==='true') echo 'checked'; ?>><label for="hasFireplace"> mit Kamin</label>
-            <label for="keywords">Inserattext Suche </label><input type="text" id="keywords" name="keyword" <?php if(isset($_GET['keyword'])) echo 'value="'.$_GET['keyword'].'"'; ?>>
-            <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label>
+            </select><br>
+            <label for="roomsFrom">Zimmer </label><input type="number" id="roomsFrom" name="roomsFrom" <?php if(isset($_GET['roomsFrom'])) echo 'value="'.$_GET['roomsFrom'].'"'; ?>> bis <input type="number" id="roomsTo" name="roomsTo" <?php if(isset($_GET['roomsTo'])) echo 'value="'.$_GET['roomsTo'].'"'; ?>><br>
+            <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF<br>
+            <label for="livingSpaceFrom">Wohnfl&auml;che </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup><br>
+            <label for="minAvailableDate">Einzug ab (YYYY-mm)</label><input type="month" id="minAvailableDate" name="minAvailableDate" getParam><br>
+            <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '30'; ?>"> Tage<br>
+            <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" onchange="comparisRankVal.value=value" value="<?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?>"><output id="comparisRankVal"><?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?></output><br>
+            <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label><br>
+            <input type="checkbox" name="hasTerace" id="hasTerace" value="true" <?php if($_GET['hasTerace']=='true') echo 'checked'; ?>><label for="hasTerace"> mit Terasse</label><br>
+            <input type="checkbox" name="hasWashingMachine" id="hasWashingMachine" value="true" <?php if($_GET['hasWashingMachine']==='true') echo 'checked'; ?>><label for="hasWashingMachine"> mit Waschmaschine</label><br>
+            <input type="checkbox" name="hasLift" id="hasLift" value="true" <?php if($_GET['hasLift']==='true') echo 'checked'; ?>><label for="hasLift"> mit Lift</label><br>
+            <input type="checkbox" name="hasParking" id="hasParking" value="true" <?php if($_GET['hasParking']==='true') echo 'checked'; ?>><label for="hasParking"> mit Parkplatz</label><br>
+            <input type="checkbox" name="petsAllowed" id="petsAllowed" value="true" <?php if($_GET['petsAllowed']==='true') echo 'checked'; ?>><label for="petsAllowed"> Haustiere erlaubt</label><br>
+            <input type="checkbox" name="minergieCertified" id="minergieCertified" value="true" <?php if($_GET['minergieCertified']==='true') echo 'checked'; ?>><label for="minergieCertified"> Minergie-zertifiziert</label><br>
+            <input type="checkbox" name="WheelchairAccessible" id="WheelchairAccessible" value="true" <?php if($_GET['WheelchairAccessible']==='true') echo 'checked'; ?>><label for="WheelchairAccessible"> Rollstuhlg&auml;ngig</label><br>
+            <input type="checkbox" name="hasFireplace" id="hasFireplace" value="true" <?php if($_GET['hasFireplace']==='true') echo 'checked'; ?>><label for="hasFireplace"> mit Kamin</label><br>
+            <label for="keywords">Inserattext Suche </label><input type="text" id="keywords" name="keyword" <?php if(isset($_GET['keyword'])) echo 'value="'.$_GET['keyword'].'"'; ?>><br>
+            <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label><br>
             
-            <label for="destination">Reiseziel </label><input type="text" id="destination" id="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>>
+            <label for="destination">Reiseziel </label><input type="text" id="destination" id="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>><br>
             <label for="transportType">Verkehrsmittel </label><select id="transportType" name="transportType">
                 <option value="transit" <?php if($_GET['transportType']==='transit'||!isset($_GET['transportType'])) echo 'selected'; ?>>&ouml;V</option>
                 <option value="driving" <?php if($_GET['transportType']==='driving') echo 'selected'; ?>>Auto</option>
                 <option value="bicycling" <?php if($_GET['transportType']==='bicycling') echo 'selected'; ?>>Velo</option>
                 <option value="walking" <?php if($_GET['transportType']==='walking') echo 'selected'; ?>>zu Fuss</option>
-            </select>
+            </select><br>
             
             <input type="submit" value="Suchen">
         </form>
+        <hr>
         <ul>
             <?php
                 foreach($places as $place) {

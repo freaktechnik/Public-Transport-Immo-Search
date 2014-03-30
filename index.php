@@ -83,28 +83,34 @@
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         $data = curl_exec($ch);
         curl_close($ch);
-        
-        // parse the html of it
-        $html = new DOMDocument();
-        $html->loadHTML($data);
-        
-        $results = false;
-        $j = 0;
-        $rows = $html->getElementsByTagName('tr');
-        if($rows->length>0&&$html->getElementById('pnlNoResult')==NULL) {
-            $results = array();
-            foreach($rows as $node) {
-                if($node->getAttribute('class')=="RowResultGeneralData") {
-                    // save every entry (more info could be extracted)
-                    $results[$j]->url = "https://www.comparis.ch".getDescriptionLink($node)->getAttribute('href');
-                    $results[$j]->title = utf8_decode(getDescriptionLink($node)->nodeValue);
-                    $results[$j]->address = getAddressString($node->getElementsByTagName('table')->item(0));
-                    $j = $j+1;
+
+        if(curl_getinfo($ch, CURLINFO_HTTP_CODE)==200) {
+            // parse the html of it
+            $html = new DOMDocument();
+            $html->loadHTML($data);
+            
+            $results = false;
+            $j = 0;
+            $rows = $html->getElementsByTagName('tr');
+            if($rows->length>0&&$html->getElementById('pnlNoResult')==NULL) {
+                $results = array();
+                foreach($rows as $node) {
+                    if($node->getAttribute('class')=="RowResultGeneralData") {
+                        // save every entry (more info could be extracted)
+                        $results[$j]->url = "https://www.comparis.ch".getDescriptionLink($node)->getAttribute('href');
+                        $results[$j]->title = utf8_decode(getDescriptionLink($node)->nodeValue);
+                        $results[$j]->address = getAddressString($node->getElementsByTagName('table')->item(0));
+                        $j = $j+1;
+                    }
                 }
             }
+            
+            return $results;
         }
-        
-        return $results;
+        else {
+            echo "Error: Comparis be wonky";
+            die();
+        }
     }
     
     // gets the description link item, since its position varies based on whether the ad has an image

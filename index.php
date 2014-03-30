@@ -248,5 +248,6 @@
                 }
             ?>
         </ul>
+        <footer>Licensed under the GPLv3. <a href="https://github.com/freaktechnik/Public-Transport-Immo-Search">Source</a></footer>
     </body>
 </html>

@@ -248,6 +248,6 @@
                 }
             ?>
         </ul>
-        <footer>Licensed under the GPLv3. <a href="https://github.com/freaktechnik/Public-Transport-Immo-Search">Source</a></footer>
+        <footer>Licensed under the GPLv3. <a href="https://github.com/freaktechnik/Public-Transport-Immo-Search">Source Code</a>. Processes data from comparis.ch, google and upc-cablecom.ch</footer>
     </body>
 </html>

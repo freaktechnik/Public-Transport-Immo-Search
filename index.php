@@ -54,7 +54,7 @@
         $aFilter->setProperty('Radius',NULL,FilterProperty::INTEGER,'comparis');
         $aFilter->setProperty('MinAvailableDate',NULL,FilterProperty::DATE,'comparis'); // NULL
         $aFilter->setProperty('MinChangeDate','today',FilterProperty::DATE,'comparis'); //now?
-        $aFilter->addProperty(FilterProperty::STRING,'LocationSearchString','comparis');
+        $aFilter->addProperty(FilterProperty::STRING,'LocationSearchString','comparis'); // ADDproperty
         $aFilter->setProperty('Sort',3,FilterProperty::INTEGER,'comparis');
         $aFilter->setProperty('HasBalcony',false,FilterProperty::BOOL,'comparis');
         $aFilter->setProperty('HasTerrace',false,FilterProperty::BOOL,'comparis');
@@ -132,6 +132,7 @@
     // load time from google
     function getPTinfo($address,$destination,$mode) {
         $address = preg_replace("/\s/","+",$address);
+        $destination = preg_replace("/\s/","+",$destination);
         $baseURL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".urlencode($address)."&destinations=".urlencode($destination)."&sensor=false&mode=".$mode."&language=de&units=metric";
         
         $ch = curl_init();
@@ -209,7 +210,7 @@
             <label for="priceFrom">Preis </label><input type="number" id="priceFrom" name="priceFrom" <?php if(isset($_GET['priceFrom'])) echo 'value="'.$_GET['priceFrom'].'"'; ?>> CHF bis <input type="number" id="priceTo" name="priceTo" <?php if(isset($_GET['priceTo'])) echo 'value="'.$_GET['priceTo'].'"'; ?>> CHF<br>
             <label for="livingSpaceFrom">Wohnfl&auml;che </label><input type="number" id="livingSpaceFrom" name="livingSpaceFrom" <?php if(isset($_GET['livingSpaceFrom'])) echo 'value="'.$_GET['livingSpaceFrom'].'"'; ?>>m<sup>2</sup> bis <input type="number" id="livingSpaceTo" name="livingSpaceTo" <?php if(isset($_GET['livingSpaceTo'])) echo 'value="'.$_GET['livingSpaceTo'].'"'; ?>>m<sup>2</sup><br>
             <label for="minAvailableDate">Einzug ab (YYYY-mm)</label><input type="month" id="minAvailableDate" name="minAvailableDate" getParam><br>
-            <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '30'; ?>"> Tage<br>
+            <label for="adAgeMax">Inserat j&uuml;nger als</label><input id="adAgeMax" name="adAgeMax" type="number" pattern="[0-2]?[0-9]||30" value="<?php if(isset($_GET['adAgeMax'])) echo $_GET['adAgeMax']; else echo '0'; ?>"> Tage (0 entspricht egal)<br>
             <label for="comparisRank">Mindest Comparis-Note</label><input name="comparisPointsMin" id="comparisRank" type="range" min="0" step="1" max="6" onchange="comparisRankVal.value=value" value="<?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?>"><output id="comparisRankVal"><?php if(isset($_GET['comparisPointsMin'])) echo $_GET['comparisPointsMin']; else echo '0'; ?></output><br>
             <input type="checkbox" name="hasBalcony" id="hasBalcony" value="true" <?php if($_GET['hasBalcony']=='true') echo 'checked'; ?>><label for="hasBalcony"> mit Balkon</label><br>
             <input type="checkbox" name="hasTerace" id="hasTerace" value="true" <?php if($_GET['hasTerace']=='true') echo 'checked'; ?>><label for="hasTerace"> mit Terasse</label><br>
@@ -223,7 +224,7 @@
             <label for="keywords">Inserattext Suche </label><input type="text" id="keywords" name="keyword" <?php if(isset($_GET['keyword'])) echo 'value="'.$_GET['keyword'].'"'; ?>><br>
             <input type="checkbox" name="withImagesOnly" id="withImagesOnly" value="true" <?php if($_GET['withImagesOnly']==='true') echo 'checked'; ?>><label for="withImagesOnly"> Nur Inserate mit Bildern</label><br>
             
-            <label for="destination">Reiseziel </label><input type="text" id="destination" id="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>><br>
+            <label for="destination">Reiseziel </label><input type="text" id="destination" name="transportDestination" <?php if(isset($_GET['transportDestination'])) echo 'value="'.$_GET['transportDestination'].'"'; ?>><br>
             <label for="transportType">Verkehrsmittel </label><select id="transportType" name="transportType">
                 <option value="transit" <?php if($_GET['transportType']==='transit'||!isset($_GET['transportType'])) echo 'selected'; ?>>&ouml;V</option>
                 <option value="driving" <?php if($_GET['transportType']==='driving') echo 'selected'; ?>>Auto</option>
